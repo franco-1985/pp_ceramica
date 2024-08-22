@@ -3,9 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from src.db.database import SessionLocal
 from src.schemas.pedido import PedidoRequest
-
-
-from src.crud.pedido import get_pedido_by_id, get_pedidos
+from src.crud.pedido import get_pedido_by_id, get_pedidos, get_pedido_full_info
 
 
 pedido = APIRouter()
@@ -39,3 +37,8 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
                "mensaje:": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
+
+
+@pedido.get("/pedido_detalle/{id}", tags=["Pedido"], name='Devolver un pedido completo')
+def get_pedido_detalle_by(id: int, db: Session = Depends(get_db)):
+    return get_pedido_full_info(id=id, db=db)

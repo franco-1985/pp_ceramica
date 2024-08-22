@@ -97,11 +97,15 @@ class DetallePedido(Base):
     id_detalle_pedido = Column(INTEGER(11), primary_key=True)
     id_pedido = Column(INTEGER(11))
     cantidad_producto = Column(INTEGER(11), nullable=False)
-    total = Column(DECIMAL(11,3))
+    total = Column(DECIMAL(11, 3))
     id_producto = Column(ForeignKey('producto.id_producto'), index=True)
     id_estado_pedido = Column(INTEGER(11), nullable=False)
 
     producto = relationship('Producto')
+
+
+    def __str__(self) -> str:
+        return 'estoy mostrando el str del objeto unico'
 
 
 class Productoxfase(Base):

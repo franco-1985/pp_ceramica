@@ -25,7 +25,7 @@ def get(db: Session = Depends(get_db)):
         return select_clientes(db=db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -36,7 +36,7 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return select_cliente_by_id(db=db, id=id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -47,32 +47,36 @@ def post_cliente(cliente: ClienteRequest, db: Session = Depends(get_db)):
         return insert_cliente(db=db, cliente=Cliente(**cliente.model_dump(exclude_unset=True)))
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
 
 @cliente.put("/cliente", tags=["Cliente"], name="Actualizar cliente")
 def put_cliente(cliente: ClienteRequest, db: Session = Depends(get_db)):
-    if cliente.id_cliente != None:
-        campos = {'id_cliente': cliente.id_cliente}
-        if cliente.nombre_cliente is not None:
-            campos['nombre_cliente'] = cliente.nombre_cliente
-        if cliente.apellido_cliente is not None:
-            campos['apellido_cliente'] = cliente.apellido_cliente
-        if cliente.direccion_cliente is not None:
-            campos['direccion_cliente'] = cliente.direccion_cliente
-        if cliente.telefono_cliente is not None:
-            campos['telefono_cliente'] = cliente.telefono_cliente
-        if cliente.email_cliente is not None:
-            campos['email_cliente'] = cliente.email_cliente
-
-        print(f'----campo {campos}<------>{type(campos)}<----')
-        return update_cliente(db=db, nuevos_datos=campos)
-    else:
+    try:
+        if cliente.id_cliente != None:
+            campos = {'id_cliente': cliente.id_cliente}
+            if cliente.nombre_cliente is not None:
+                campos['nombre_cliente'] = cliente.nombre_cliente
+            if cliente.apellido_cliente is not None:
+                campos['apellido_cliente'] = cliente.apellido_cliente
+            if cliente.direccion_cliente is not None:
+                campos['direccion_cliente'] = cliente.direccion_cliente
+            if cliente.telefono_cliente is not None:
+                campos['telefono_cliente'] = cliente.telefono_cliente
+            if cliente.email_cliente is not None:
+                campos['email_cliente'] = cliente.email_cliente
+            return update_cliente(db=db, nuevos_datos=campos)
+        else:
+            msg = {'status': -1,
+                "mensaje": 'Debe indicar un id al cual desea modificar al menos'}
+            status = 400
+            return JSONResponse(content=msg, status_code=status)
+    except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": 'Debe indicar un id al cual desea modificar al menos'}
-        status = 400
+               "mensaje": str(ex.detail)}
+        status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
     # def get_cliente(id: int):

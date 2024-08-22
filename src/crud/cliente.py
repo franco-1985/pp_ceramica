@@ -35,12 +35,15 @@ def insert_cliente(db, cliente: Cliente):
 
 
 def update_cliente(db, nuevos_datos: dict):
-    cliente = db.query(Cliente).filter(Cliente.id_cliente).first()
+    cliente = db.query(Cliente).get(nuevos_datos['id_cliente'])
     if cliente:
         for key, value in nuevos_datos.items():
             setattr(cliente, key, value)
         db.commit()
         db.refresh(cliente)
+        msg = {'status': 0,
+            'mensaje': f"Se modifico el cliente correctamente con los nuevos datos."}
+        return JSONResponse(content=msg, status_code=200)
     else:
         raise HTTPException(
             status_code=201, detail=DETAILS_EXCEPTION)

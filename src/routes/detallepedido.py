@@ -3,8 +3,6 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from src.db.database import SessionLocal
 from src.schemas.detallepedido import DetallePedidoRequest
-
-
 from src.crud.detallepedido import get_detalle_pedido_by_id, get_detalles_pedidos
 
 
