@@ -9,10 +9,10 @@ DETAILS_EXCEPTION = 'Cliente no encontrado'
 
 def select_clientes(db):
     res = db.query(Cliente).all()
-    if len(res) != 0:
-        return res
-    raise HTTPException(
-        status_code=201, detail="No hay listado")
+    if not res:
+        raise HTTPException(
+            status_code=201, detail="No hay listado")
+    return res
 
 
 def select_cliente_by_id(db, id: int):
@@ -42,7 +42,7 @@ def update_cliente(db, nuevos_datos: dict):
         db.commit()
         db.refresh(cliente)
         msg = {'status': 0,
-            'mensaje': f"Se modifico el cliente correctamente con los nuevos datos."}
+               'mensaje': f"Se modifico el cliente correctamente con los nuevos datos."}
         return JSONResponse(content=msg, status_code=200)
     else:
         raise HTTPException(

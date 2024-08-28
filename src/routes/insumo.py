@@ -46,8 +46,8 @@ def get_input_order(id_pedido: int, db: Session = Depends(get_db)):
         return get_insumos_pedido(db=db, id_pedido=id_pedido)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
-        status = ex.status_code
+               "mensaje:": str(ex)}
+        status = 200#ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
 
