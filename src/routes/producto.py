@@ -3,9 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from src.db.database import SessionLocal
 from src.schemas.producto import ProductoRequest
-
-
-from src.crud.producto import get_productos, get_producto_by_id
+from src.crud.producto import get_productos, get_producto_by_id, get_insumos_productos
 
 
 producto = APIRouter()
@@ -19,13 +17,13 @@ def get_db():
         db.close()
 
 
-@producto.get("/producto/", tags=["Producto"], response_model=list[ProductoRequest],name='Devolver listado de productos')
+@producto.get("/producto/", tags=["Producto"], response_model=list[ProductoRequest], name='Devolver listado de productos')
 def get(db: Session = Depends(get_db)):
     try:
         return get_productos(db)
     except Exception as ex:
         msg = {'status': -1,
-            "mensaje:": str(ex.detail)}
+               "mensaje:": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -36,6 +34,18 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return get_producto_by_id(db, id)
     except Exception as ex:
         msg = {'status': -1,
-            "mensaje:": str(ex.detail)}
+               "mensaje:": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
+
+
+@producto.get("/producto_insumo/{id_producto}", tags=['Producto Insumo'], name='Devolver cantidad de insumos por un pedido')
+def get_input_product(id_producto: int, db: Session = Depends(get_db)):
+    try:
+        return get_insumos_productos(db=db, id_producto=id_producto)
+    except Exception as ex:
+        msg = {'status': -1,
+               "mensaje:": str(ex.detail)}
+        status = ex.status_code
+        return JSONResponse(content=msg, status_code=status)
+    

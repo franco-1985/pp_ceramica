@@ -1,6 +1,9 @@
+from sqlalchemy.dialects import mysql
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
-from src.models.models import Producto
+from src.models.models import Producto, Productoxinsumo
+from src.crud.insumo import get_insumo_by_id
+from src.crud.unidadmedida import get_unidades_medidas_by_id
 
 DETAILS_EXCEPTION = 'Producto no encontrado'
 
@@ -20,3 +23,20 @@ def get_productos(db):
         return res
     raise HTTPException(
         status_code=201, detail="No hay listado")
+
+
+def get_insumos_productos(db, id_producto: int):
+    res = db.query(Productoxinsumo).filter(
+        Productoxinsumo.id_producto == id_producto).all()
+    if len(res) != 0:
+        for res_prod_ins in res:
+            res_insumo = get_insumo_by_id(db=db, id=res_prod_ins.id_insumo).nombre_insumo
+            res_producto = get_producto_by_id(db=db, id=res_prod_ins.id_producto).nombre_producto
+            res_unidad_medida = get_unidades_medidas_by_id(db=db, id=res_prod_ins.id_unidad_medida).nombre_unidad_medida
+            res_prod_ins.nombre_insumo = res_insumo
+            res_prod_ins.nombre_producto = res_producto
+            res_prod_ins.nombre_unidad_medida = res_unidad_medida
+        return res
+    raise HTTPException(
+        status_code=201, detail="No hay listado")
+

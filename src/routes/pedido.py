@@ -41,4 +41,4 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
 
 @pedido.get("/pedido_detalle/{id}", tags=["Pedido"], name='Devolver un pedido completo')
 def get_pedido_detalle_by(id: int, db: Session = Depends(get_db)):
-    return get_pedido_full_info(id=id, db=db)
+    return get_pedido_full_info(id_pedido=id, db=db)

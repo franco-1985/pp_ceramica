@@ -5,6 +5,7 @@ from src.db.database import SessionLocal
 from sqlalchemy.orm import Session
 # from src.db.db import conn
 from src.crud.insumo import get_insumos as get_insumo, get_insumo_by_id
+from src.crud.pedido import get_insumos_pedido
 
 insumo = APIRouter()
 
@@ -37,6 +38,18 @@ def get(id: int, db: Session = Depends(get_db)):
                "mensaje:": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
+    
+
+@insumo.get("/producto_insumo_pedido/{id_pedido}", tags=['Insumos pedido'], name='Devolver cantidad de insumos por un pedido')
+def get_input_order(id_pedido: int, db: Session = Depends(get_db)):
+    try:
+        return get_insumos_pedido(db=db, id_pedido=id_pedido)
+    except Exception as ex:
+        msg = {'status': -1,
+               "mensaje:": str(ex.detail)}
+        status = ex.status_code
+        return JSONResponse(content=msg, status_code=status)
+
 
 
 # def get_insumo(id: int):
