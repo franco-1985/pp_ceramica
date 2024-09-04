@@ -12,7 +12,7 @@ def get_detalles_pedidos(db):
     res = db.query(DetallePedido).all()
     if not res:
         raise HTTPException(
-            status_code=201, detail="No hay listado")
+            status_code=201, detail="No hay listadoss")
     return res
 
 
@@ -31,15 +31,16 @@ def get_detalle_pedido_by_pedido(db, id_pedido: int):
         raise HTTPException(
             status_code=201, detail=DETAILS_EXCEPTION)
     for item_detalle in lista_detalle:
-        if (item_detalle.total == None):
-            res_producto = get_producto_by_id(
-                db=db, id=item_detalle.id_producto)
-            total = item_detalle.cantidad_producto * res_producto.precio_producto
-            item_detalle.total = total
-            item_detalle.nombre_producto = res_producto.nombre_producto
-            item_detalle_estado = get_estado_by_id(
-                db=db, id=item_detalle.id_estado_pedido)
-            item_detalle.nombre_estado_detalle = item_detalle_estado.nombre_estado
+        # if (item_detalle.total != 0 or item_detalle.total == None):
+        res_producto = get_producto_by_id(
+            db=db, id=item_detalle.id_producto)
+        # print(res_producto.nombre_producto)
+        total = item_detalle.cantidad_producto * res_producto.precio_producto
+        item_detalle.total = total
+        item_detalle.nombre_producto = res_producto.nombre_producto
+        item_detalle_estado = get_estado_by_id(
+            db=db, id=item_detalle.id_estado_pedido)
+        item_detalle.nombre_estado_detalle = item_detalle_estado.nombre_estado
     return lista_detalle
 
 

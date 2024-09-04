@@ -15,7 +15,7 @@ def get_pedidos(db):
     res = db.query(Pedido).all()
     if not res:
         raise HTTPException(
-            status_code=201, detail="No hay listado")
+            status_code=201, detail="No hay listados")
     return res
 
 
@@ -42,13 +42,12 @@ def get_pedido_full_info(db: sessionmaker, id_pedido: int):
 
 def get_insumos_pedido(db: sessionmaker, id_pedido: int):
     res = get_pedido_full_info(db=db, id_pedido=id_pedido)
-
     acumulado = defaultdict(lambda: {'cantidad_total': 0, 'precio_total': 0.0})
     total_insumos = defaultdict(lambda: 0.0)
 
     for item in res['detalle_pedido']:
         producto_id = item.id_producto
-        acumulado[producto_id]['nombre_producto'] = item.nombre_producto
+        # acumulado[producto_id]['nombre_producto'] = item.nombre_producto
         acumulado[producto_id]['cantidad_total'] += item.cantidad_producto
         acumulado[producto_id]['precio_total'] += float(item.total)
 
@@ -70,7 +69,7 @@ def get_insumos_pedido(db: sessionmaker, id_pedido: int):
 
         resultado.append({
             'producto': producto_id,
-            'nombre_producto': valores['nombre_producto'],
+            # 'nombre_producto': valores['nombre_producto'],
             'cantidad_total': valores['cantidad_total'],
             'precio_total': valores['precio_total'],
             'detalle_insumo': detalle_insumo

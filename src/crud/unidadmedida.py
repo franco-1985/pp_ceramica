@@ -11,7 +11,7 @@ def get_unidades_medida(db):
     if len(res) != 0:
         return res
     raise HTTPException(
-        status_code=201, detail="No hay listado")
+        status_code=201, detail="No hay listado de unidades de medida")
 
 
 def get_unidades_medidas_by_id(db, id: int):

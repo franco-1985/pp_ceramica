@@ -25,7 +25,7 @@ def get(db: Session = Depends(get_db)):
         return get_estado(db=db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -36,7 +36,7 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return get_estado_by_id(db=db, id=id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 

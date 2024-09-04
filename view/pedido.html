@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input[type="text"] {
+            width: calc(100% - 90px);
+            padding: 8px;
+        }
+        button {
+            padding: 8px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .section h3 {
+            margin-bottom: 10px;
+        }
+        .section p {
+            margin: 5px 0;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .section table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de Pedido</h1>
+        <div>
+            <input type="text" id="pedidoId" placeholder="Ingrese número de pedido">
+            <button onclick="buscarPedido()">Buscar</button>
+        </div>
+        <div class="section" id="pedidoInfo"></div>
+        <div class="section" id="detallePedidoInfo"></div>
+    </div>
+
+    <script>
+        async function buscarPedido() {
+            const pedidoId = document.getElementById('pedidoId').value;
+            const url = `http://127.0.0.1:8000/pedido_detalle/${pedidoId}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Pedido no encontrados");
+                }
+                const jsonData = await response.json();
+                mostrarPedido(jsonData.pedido);
+                mostrarDetallePedido(jsonData.detalle_pedido);
+            } catch (error) {
+                document.getElementById('pedidoInfo').innerHTML = "Pedido no encontradoss";
+                document.getElementById('detallePedidoInfo').innerHTML = "";
+            }
+        }
+
+        function mostrarPedido(pedido) {
+            const pedidoInfo = `
+                <h3>Datos del Pedido</h3>
+                <p><strong>ID Pedido:</strong> ${pedido.id_pedido}</p>
+                <p><strong>ID Cliente:</strong> ${pedido.id_cliente}</p>
+                <p><strong>Fecha del Pedido:</strong> ${pedido.fecha_pedido}</p>
+                <p><strong>Total del Pedido:</strong> $${pedido.total_pedido}</p>
+                <p><strong>Cantidad de Productos:</strong> ${pedido.cantidad_productos_total}</p>
+            `;
+            document.getElementById('pedidoInfo').innerHTML = pedidoInfo;
+        }
+
+        function mostrarDetallePedido(detalles) {
+            let detalleInfo = `
+                <h3>Detalle del Pedido</h3>
+                <table>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+            `;
+            detalles.forEach(detalle => {
+                detalleInfo += `
+                    <tr>
+                        <td>${detalle.nombre_producto}</td>
+                        <td>${detalle.cantidad_producto}</td>
+                        <td>$${detalle.total}</td>
+                        <td>${detalle.nombre_estado_detalle}</td>
+                    </tr>
+                `;
+            });
+            detalleInfo += `</table>`;
+            document.getElementById('detallePedidoInfo').innerHTML = detalleInfo;
+        }
+    </script>
+</body>
+</html>

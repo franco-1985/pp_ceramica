@@ -11,7 +11,7 @@ def select_clientes(db):
     res = db.query(Cliente).all()
     if not res:
         raise HTTPException(
-            status_code=201, detail="No hay listado")
+            status_code=201, detail="No hay listado de clientes")
     return res
 
 

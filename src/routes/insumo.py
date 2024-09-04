@@ -24,7 +24,7 @@ def get(db: Session = Depends(get_db)):
         return get_insumo(db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -35,7 +35,7 @@ def get(id: int, db: Session = Depends(get_db)):
         return get_insumo_by_id(db, id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
     
@@ -46,7 +46,8 @@ def get_input_order(id_pedido: int, db: Session = Depends(get_db)):
         return get_insumos_pedido(db=db, id_pedido=id_pedido)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               #"mensaje:": str(ex)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 

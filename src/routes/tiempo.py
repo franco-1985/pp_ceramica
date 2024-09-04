@@ -25,7 +25,7 @@ def get(db: Session = Depends(get_db)):
         return get_tiempos(db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -36,6 +36,6 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return get_tiempo_by_id(db, id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)

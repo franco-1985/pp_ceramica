@@ -8,10 +8,19 @@ from src.routes.producto import producto
 from src.routes.tiempo import tiempo
 from src.routes.detallepedido import detpedido
 from src.routes.pedido import pedido
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="API catalogo ceramica",
               description="Definicion de metodos para obtener datos")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todas las URLs
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos HTTP
+    allow_headers=["*"],  # Permite todos los headers
+)
 
 app.include_router(cliente)
 app.include_router(estado)

@@ -23,7 +23,7 @@ def get(db: Session = Depends(get_db)):
         return get_pedidos(db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -34,11 +34,19 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return get_pedido_by_id(db, id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
 
 @pedido.get("/pedido_detalle/{id}", tags=["Pedido"], name='Devolver un pedido completo')
 def get_pedido_detalle_by(id: int, db: Session = Depends(get_db)):
-    return get_pedido_full_info(id_pedido=id, db=db)
+    try:
+        return get_pedido_full_info(id_pedido=id, db=db)
+    except Exception as ex:
+        msg = {'status': -1,
+               "mensaje": str(ex.detail)}
+        status = ex.status_code
+        return JSONResponse(content=msg, status_code=status)    
+    
+

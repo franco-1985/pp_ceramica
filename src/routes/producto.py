@@ -23,7 +23,7 @@ def get(db: Session = Depends(get_db)):
         return get_productos(db)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -34,7 +34,7 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
         return get_producto_by_id(db, id)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
 
@@ -45,7 +45,7 @@ def get_input_product(id_producto: int, db: Session = Depends(get_db)):
         return get_insumos_productos(db=db, id_producto=id_producto)
     except Exception as ex:
         msg = {'status': -1,
-               "mensaje:": str(ex.detail)}
+               "mensaje": str(ex.detail)}
         status = ex.status_code
         return JSONResponse(content=msg, status_code=status)
     

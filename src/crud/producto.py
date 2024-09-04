@@ -22,7 +22,7 @@ def get_productos(db):
     if len(res) != 0:
         return res
     raise HTTPException(
-        status_code=201, detail="No hay listado")
+        status_code=201, detail="No hay listadosss")
 
 
 from sqlalchemy.orm import joinedload
@@ -36,7 +36,7 @@ def get_insumos_productos(db, id_producto: int):
 
     if not res:
         raise HTTPException(
-            status_code=201, detail="No hay listado"
+            status_code=201, detail="No hay listado de productos"
         )
 
     for res_prod_ins in res:
