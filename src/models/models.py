@@ -18,6 +18,8 @@ class Cliente(Base):
     telefono_cliente = Column(String(13))
     email_cliente = Column(String(100))
 
+    pedidos = relationship("Pedido", back_populates="cliente")
+
 
 class Estado(Base):
     __tablename__ = 'estado'
@@ -147,7 +149,9 @@ class Pedido(Base):
     fecha_entrega_aproximado = Column(DateTime)
     fecha_entrega_real = Column(DateTime)
     id_estado_pedido = Column(INTEGER(11))
-    id_cliente = Column(INTEGER(11))
-    id_detalle_pedido = Column(ForeignKey('detalle_pedido.id_detalle_pedido'))
+    # id_cliente = Column(INTEGER(11))
+    id_cliente = Column(INTEGER, ForeignKey('cliente.id_cliente'))
+    # id_detalle_pedido = Column(ForeignKey('detalle_pedido.id_detalle_pedido'))
 
-    detalle_pedido = relationship('DetallePedido')
+    # detalle_pedido = relationship('DetallePedido')
+    cliente = relationship("Cliente", back_populates="pedidos")

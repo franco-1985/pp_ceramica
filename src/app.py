@@ -9,6 +9,7 @@ from src.routes.tiempo import tiempo
 from src.routes.detallepedido import detpedido
 from src.routes.pedido import pedido
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI(title="API catalogo ceramica",
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],  # Permite todos los métodos HTTP
     allow_headers=["*"],  # Permite todos los headers
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(cliente)
 app.include_router(estado)

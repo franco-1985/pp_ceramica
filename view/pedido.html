@@ -75,6 +75,8 @@
                 <p><strong>ID Pedido:</strong> ${pedido.id_pedido}</p>
                 <p><strong>ID Cliente:</strong> ${pedido.id_cliente}</p>
                 <p><strong>Fecha del Pedido:</strong> ${pedido.fecha_pedido}</p>
+                <p><strong>Fecha posible de entrega:</strong> ${pedido.fecha_entrega_aproximado ? pedido.fecha_entrega_aproximado : '-'}</p>
+                <p><strong>Fecha real de entrega:</strong> ${pedido.fecha_entrega_real ? pedido.fecha_entrega_real : '-'}</p>
                 <p><strong>Total del Pedido:</strong> $${pedido.total_pedido}</p>
                 <p><strong>Cantidad de Productos:</strong> ${pedido.cantidad_productos_total}</p>
             `;

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Productos</title>
+    <style>
+        /* Estilos para la grilla */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .product-item img {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            display: none;
+        }
+
+        .product-item .zoom {
+            cursor: pointer;
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Estilo del modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Paginación */
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="product-grid" id="productGrid"></div>
+
+    <!-- Paginación -->
+    <div class="pagination" id="pagination"></div>
+
+    <!-- Modal para visualizar imágenes -->
+    <div class="modal" id="imageModal">
+        <span onclick="closeModal()"
+            style="cursor: pointer; color: white; position: absolute; top: 20px; right: 20px;">&times;</span>
+        <img id="modalImage" src="" alt="Producto">
+    </div>
+
+    <script>
+        const apiUrl = 'http://127.0.0.1:8000/producto/';
+        const staticUrl = 'http://127.0.0.1:8000/static/'; // URL base para imágenes estáticas
+        const productsPerPage = 15; // 3 columnas y 5 filas por defecto
+        let currentPage = 1;
+        let totalProducts = 0;
+        let allProducts = [];
+
+        // Fetch de productos
+        async function fetchProducts() {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            allProducts = data;
+            totalProducts = allProducts.length;
+            renderProducts();
+            renderPagination();
+        }
+
+        // Renderizar productos en la grilla
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = ''; // Limpiar la grilla
+
+            const start = (currentPage - 1) * productsPerPage;
+            const end = start + productsPerPage;
+            const productsToShow = allProducts.slice(start, end);
+
+            productsToShow.forEach(product => {
+                const item = document.createElement('div');
+                item.classList.add('product-item');
+
+                // Convertir la ruta de la imagen
+                const imageUrl = product.imagen ? `${staticUrl}${product.imagen.split('\\').join('/')}` : '';
+
+                item.innerHTML = `
+                    <h4>${product.nombre_producto}</h4>
+                    <p>Precio: $${product.precio_producto}</p>
+                    <p>Medida: ${product.medida_producto}</p>
+                    ${product.imagen ? `<span class="zoom" onclick="showImage('${imageUrl}')">Ver imagen</span>` : ''}
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // Renderizar paginación
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            const totalPages = Math.ceil(totalProducts / productsPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.onclick = () => changePage(i);
+                pagination.appendChild(button);
+            }
+        }
+
+        // Cambiar página
+        function changePage(page) {
+            currentPage = page;
+            renderProducts();
+        }
+
+        // Mostrar imagen en el modal
+        function showImage(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            modal.style.display = 'flex';
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+
+        // Cargar productos cuando la página esté lista
+        window.onload = fetchProducts;
+    </script>
+</body>
+
+</html>

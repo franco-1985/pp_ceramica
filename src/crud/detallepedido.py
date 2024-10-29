@@ -10,6 +10,7 @@ DETAILS_EXCEPTION = 'Detalle pedido no encontrado'
 
 def get_detalles_pedidos(db):
     res = db.query(DetallePedido).all()
+    print(res)
     if not res:
         raise HTTPException(
             status_code=201, detail="No hay listadoss")
@@ -17,7 +18,8 @@ def get_detalles_pedidos(db):
 
 
 def get_detalle_pedido_by_id(db, id: int):
-    res = db.query(DetallePedido).get(id)
+    res = db.query(DetallePedido).filter(DetallePedido.id_detalle_pedido == id).all()
+    print(len(res))
     if not res:
         raise HTTPException(
             status_code=201, detail=DETAILS_EXCEPTION)
@@ -34,9 +36,6 @@ def get_detalle_pedido_by_pedido(db, id_pedido: int):
         # if (item_detalle.total != 0 or item_detalle.total == None):
         res_producto = get_producto_by_id(
             db=db, id=item_detalle.id_producto)
-        # print(res_producto.nombre_producto)
-        total = item_detalle.cantidad_producto * res_producto.precio_producto
-        item_detalle.total = total
         item_detalle.nombre_producto = res_producto.nombre_producto
         item_detalle_estado = get_estado_by_id(
             db=db, id=item_detalle.id_estado_pedido)
@@ -44,5 +43,14 @@ def get_detalle_pedido_by_pedido(db, id_pedido: int):
     return lista_detalle
 
 
-def update_precio_producto_detalle(id_detalle_pedido: int):
-    pass
+def insert_detalle_pedido(db, detalle: DetallePedido):
+    res_producto = get_producto_by_id(
+        db=db, id=detalle.id_producto)
+    total = detalle.cantidad_producto * res_producto.precio_producto
+    detalle.total = total
+    db.add(detalle)
+    db.commit()
+    db.refresh(detalle)
+    msg = {'status': 0,
+           'mensaje': f"Se inserto el pedido correctamente con el id {detalle}"}
+    return JSONResponse(content=msg, status_code=200)
